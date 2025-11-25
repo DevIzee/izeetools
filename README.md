@@ -1,17 +1,17 @@
 # IzeeTools
 
-**Projet :** IzeeTools
+**Project:** IzeeTools
 
-**Description :** Suite d'outils légers front-end : générateur de QR codes avancé (Wi‑Fi, vCard, Email pré‑rempli, SMS, Géolocalisation, Événement), raccourcisseur de lien (is.gd) et générateur de mot de passe (API https://www.motdepasse.xyz/api/ avec fallback local).
+**Description:** Lightweight frontend tool suite: advanced QR code generator (Wi-Fi, vCard, pre-filled Email, SMS, Geolocation, Event), link shortener (is.gd), and password generator (API https://www.motdepasse.xyz/api/ with local fallback).
 
-**Fichiers :**
+**Files:**
 
-- `index.html` : application complète (UI + JS)
-- `README.md` : ce fichier
+- `index.html`: complete application (UI + JS)
+- `README.md`: this file
 
-## Fonctionnalités
+## Features
 
--QR avancés, shortener, password gen. ✅.
+- Advanced QR codes, link shortener, password generator. ✅
 
-**Instructions :**
-Ouvrir `index.html` dans un navigateur moderne. Pas de build nécessaire. Les appels externes sont effectués depuis le navigateur.
+**Instructions:**
+Open `index.html` in a modern browser. No build required. All external API calls are made from the browser.
