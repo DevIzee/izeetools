@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IzeeTools — Générateur QR & utilitaires</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -10,57 +10,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        body {
-            background: #FBF8F3;
-        }
-        .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        .btn-primary {
-            background: #5B21B6;
-            color: white;
-            transition: all 0.2s;
-        }
-        .btn-primary:hover {
-            background: #4C1D95;
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background: #FCD34D;
-            color: #1F2937;
-            transition: all 0.2s;
-        }
-        .btn-secondary:hover {
-            background: #FBBF24;
-            transform: translateY(-1px);
-        }
-        .input-field {
-            border: 1px solid #E5E7EB;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #5B21B6;
-            box-shadow: 0 0 0 3px rgba(91, 33, 182, 0.1);
-        }
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 200px;
-        }
-        .share-btn {
-            transition: all 0.2s;
-        }
-        .share-btn:hover {
-            transform: scale(1.05);
-        }
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #FBF8F3; }
+        .card { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .btn-primary { background: #5B21B6; color: white; transition: all 0.15s; }
+        .btn-primary:hover { background: #4C1D95; transform: translateY(-1px); }
+        .btn-secondary { background: #FCD34D; color: #1F2937; transition: all 0.15s; }
+        .btn-secondary:hover { background: #FBBF24; transform: translateY(-1px); }
+        .input-field { border: 1px solid #E5E7EB; border-radius: 6px; transition: all 0.12s; }
+        .input-field:focus { outline: none; border-color: #5B21B6; box-shadow: 0 0 0 3px rgba(91, 33, 182, 0.08); }
+        #qrcode { display:flex; justify-content:center; align-items:center; min-height:200px; }
     </style>
 </head>
 <body>
@@ -68,167 +27,268 @@
     <header class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-gray-900">IzeeTools</h1>
+                <div class="flex items-center gap-4">
+                    <img src="logo.png" alt="Logo IzeeTools" class="h-9 w-9 mr-2 rounded" />
+                    <!-- <h1 class="text-2xl font-bold text-gray-900">IzeeTools</h1> -->
+                    <span class="text-sm text-gray-500">QR • Shortener • Password</span>
                 </div>
                 <nav class="hidden md:flex space-x-8">
-                    <a href="#" class="text-gray-700 hover:text-purple-700 font-medium">Accueil</a>
-                    <a href="#generator" class="text-gray-700 hover:text-purple-700 font-medium">Générateur</a>
-                    <a href="#" class="text-gray-700 hover:text-purple-700 font-medium">Faire un don</a>
+                    <a href="#app" class="text-gray-700 hover:text-purple-700 font-medium">Outils</a>
+                    <a href="#" class="text-gray-700 hover:text-purple-700 font-medium">Docs</a>
                 </nav>
-                <a href="#" class="btn-secondary px-5 py-2 rounded-lg font-semibold">
-                    Faire un don
-                </a>
+                <a href="#" class="btn-secondary px-5 py-2 rounded-lg font-semibold">Faire un don</a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Banner -->
-        <div class="bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-xl p-8 mb-12 relative overflow-hidden">
-            <div class="relative z-10">
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">
-                    Créez vos QR Codes en quelques secondes
-                </h2>
-                <p class="text-gray-800 text-lg">
-                    Simple, rapide et gratuit - partagez vos liens instantanément
-                </p>
-            </div>
-            <div class="absolute right-8 top-1/2 transform -translate-y-1/2 opacity-20">
-                <div class="w-32 h-32 bg-purple-700 rounded-full"></div>
+    <main id="app" class="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8 py-6">
+        <div class="bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                    <h2 class="text-2xl font-bold">IzeeTools</h2>
+                    <p class="text-gray-800">Générez des QR codes spécialisés, raccourcissez des liens et créez des mots de passe sécurisés.</p>
+                </div>
+                <div class="text-sm text-gray-700"></div>
             </div>
         </div>
 
-        <div id="generator" class="grid md:grid-cols-2 gap-8">
-            <!-- Bloc 1 - Saisie -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6">Générer un QR Code</h3>
-                
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            URL ou texte
-                        </label>
-                        <input 
-                            type="text" 
-                            id="qrInput" 
-                            placeholder="https://example.com ou votre texte"
-                            class="input-field w-full px-4 py-3"
-                        />
+        <!-- Top tabs for tools -->
+        <div class="card p-3 sm:p-4 mb-6 sm:mb-8">
+            <div class="flex flex-wrap gap-2" role="tablist" aria-label="Outils">
+                <button class="tab-btn px-4 py-2 rounded-md font-medium w-full sm:w-auto" data-target="tab-qr">🔲 QR Code</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium w-full sm:w-auto" data-target="tab-short">🔗 Raccourcisseur</button>
+                <button class="tab-btn px-4 py-2 rounded-md font-medium w-full sm:w-auto" data-target="tab-pass">🔑 Générateur de mot de passe</button>
+            </div>
+        </div>
+
+        <!-- QR Tool -->
+        <section id="tab-qr" class="tool-tab">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Form side -->
+                <div class="card p-4 sm:p-6">
+                    <h3 class="text-xl font-bold mb-4">Créer un QR Code</h3>
+
+                    <!-- QR type tabs -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button class="qr-type-btn px-3 py-2 rounded-md text-sm w-full sm:w-auto" data-type="raw">Texte/URL</button>
+                        <button class="qr-type-btn px-3 py-2 rounded-md text-sm w-full sm:w-auto" data-type="wifi">WiFi</button>
+                        <button class="qr-type-btn px-3 py-2 rounded-md text-sm w-full sm:w-auto" data-type="vcard">vCard</button>
+                        <button class="qr-type-btn px-3 py-2 rounded-md text-sm w-full sm:w-auto" data-type="email">Email</button>
+                        <button class="qr-type-btn px-3 py-2 rounded-md text-sm w-full sm:w-auto" data-type="sms">SMS</button>
+                        <button class="qr-type-btn px-3 py-2 rounded-md text-sm w-full sm:w-auto" data-type="geo">Géo</button>
+                        <button class="qr-type-btn px-3 py-2 rounded-md text-sm w-full sm:w-auto" data-type="event">Événement</button>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Niveau de correction d'erreur
-                        </label>
-                        <select id="errorCorrection" class="input-field w-full px-4 py-3">
+                    <!-- Forms container -->
+                    <div id="qrForms" class="space-y-4">
+                        <!-- Raw -->
+                        <div class="qr-form" data-type="raw">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Texte ou URL</label>
+                            <input id="rawText" class="input-field w-full px-4 py-3" placeholder="https://example.com ou texte libre" />
+                        </div>
+
+                        <!-- WiFi -->
+                        <div class="qr-form hidden" data-type="wifi">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">SSID</label>
+                            <input id="wifiSSID" class="input-field w-full px-4 py-3" placeholder="Nom du réseau" />
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sécurité</label>
+                                <select id="wifiAuth" class="input-field w-full px-4 py-3">
+                                    <option value="WPA">WPA/WPA2</option>
+                                    <option value="WEP">WEP</option>
+                                    <option value="nopass">Aucun</option>
+                                </select>
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
+                                <input id="wifiPass" class="input-field w-full px-4 py-3" placeholder="Mot de passe (laisser vide pour nopass)" />
+                            </div>
+                            <div class="mt-3">
+                                <label class="inline-flex items-center"><input id="wifiHidden" type="checkbox" class="mr-2"> Réseau masqué (hidden)</label>
+                            </div>
+                        </div>
+
+                        <!-- vCard -->
+                        <div class="qr-form hidden" data-type="vcard">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet</label>
+                            <input id="vcName" class="input-field w-full px-4 py-3" placeholder="Prénom Nom" />
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                                <input id="vcPhone" class="input-field w-full px-4 py-3" placeholder="+33123456789" />
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input id="vcEmail" class="input-field w-full px-4 py-3" placeholder="exemple@mail.com" />
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Entreprise</label>
+                                <input id="vcOrg" class="input-field w-full px-4 py-3" placeholder="Entreprise" />
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Titre</label>
+                                <input id="vcTitle" class="input-field w-full px-4 py-3" placeholder="Titre / Poste" />
+                            </div>
+                        </div>
+
+                        <!-- Email prefilled -->
+                        <div class="qr-form hidden" data-type="email">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Destinataire</label>
+                            <input id="emTo" class="input-field w-full px-4 py-3" placeholder="destinataire@mail.com" />
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+                                <input id="emSubject" class="input-field w-full px-4 py-3" placeholder="Sujet" />
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <textarea id="emBody" class="input-field w-full px-4 py-3" rows="4" placeholder="Corps du mail"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- SMS -->
+                        <div class="qr-form hidden" data-type="sms">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Numéro</label>
+                            <input id="smsTo" class="input-field w-full px-4 py-3" placeholder="+33123456789" />
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <input id="smsBody" class="input-field w-full px-4 py-3" placeholder="Message SMS" />
+                            </div>
+                        </div>
+
+                        <!-- Geo -->
+                        <div class="qr-form hidden" data-type="geo">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
+                            <input id="geoLat" class="input-field w-full px-4 py-3" placeholder="48.8566" />
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
+                                <input id="geoLon" class="input-field w-full px-4 py-3" placeholder="2.3522" />
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Label (optionnel)</label>
+                                <input id="geoLabel" class="input-field w-full px-4 py-3" placeholder="Nom du lieu" />
+                            </div>
+                        </div>
+
+                        <!-- Event -->
+                        <div class="qr-form hidden" data-type="event">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Titre</label>
+                            <input id="evTitle" class="input-field w-full px-4 py-3" placeholder="Titre de l'événement" />
+                            <div class="mt-3 grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
+                                    <input id="evStart" type="datetime-local" class="input-field w-full px-4 py-3" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Date de fin</label>
+                                    <input id="evEnd" type="datetime-local" class="input-field w-full px-4 py-3" />
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Lieu</label>
+                                <input id="evLocation" class="input-field w-full px-4 py-3" placeholder="Lieu" />
+                            </div>
+                            <div class="mt-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <textarea id="evDesc" class="input-field w-full px-4 py-3" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Options common -->
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <select id="errorCorrection2" class="input-field px-3 py-2">
                             <option value="L">L - Bas (7%)</option>
                             <option value="M" selected>M - Moyen (15%)</option>
                             <option value="Q">Q - Élevé (25%)</option>
                             <option value="H">H - Très élevé (30%)</option>
                         </select>
+                        <input id="qrColor2" type="color" value="#000000" class="h-12 w-full rounded" />
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Taille du QR Code
-                        </label>
-                        <input 
-                            type="range" 
-                            id="qrSize" 
-                            min="128" 
-                            max="512" 
-                            value="256" 
-                            step="64"
-                            class="w-full"
-                        />
-                        <div class="flex justify-between text-xs text-gray-500 mt-1">
-                            <span>128px</span>
-                            <span id="sizeValue">256px</span>
-                            <span>512px</span>
+                    <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                        <button id="genQRBtn" class="btn-primary px-4 py-3 rounded-lg font-semibold w-full sm:w-auto">Générer</button>
+                        <button id="clearQR" class="btn-secondary px-4 py-3 rounded-lg font-semibold w-full sm:w-auto">Effacer</button>
+                    </div>
+                </div>
+
+                <!-- Result side -->
+                <div class="card p-4 sm:p-6 mt-6 md:mt-0">
+                    <h3 class="text-xl font-bold mb-4">Résultat</h3>
+                    <div id="qrcode" class="mb-4 bg-gray-50 rounded-lg p-6">
+                        <p class="text-gray-400 text-center">Votre QR Code apparaîtra ici</p>
+                    </div>
+                    <div id="qrActions" class="hidden space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button id="downloadPNG2" class="btn-primary py-3 rounded-lg font-semibold w-full">📥 PNG</button>
+                            <button id="downloadSVG2" class="btn-primary py-3 rounded-lg font-semibold w-full">📥 SVG</button>
                         </div>
+                        <button id="copyPayload" class="btn-secondary w-full py-3 rounded-lg font-semibold">📋 Copier le payload</button>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Couleur du QR Code
-                        </label>
-                        <div class="flex items-center space-x-3">
-                            <input 
-                                type="color" 
-                                id="qrColor" 
-                                value="#000000"
-                                class="h-12 w-20 rounded cursor-pointer"
-                            />
-                            <span id="colorValue" class="text-sm text-gray-600">#000000</span>
-                        </div>
-                    </div>
-
-                    <button 
-                        id="generateBtn" 
-                        class="btn-primary w-full py-4 rounded-lg font-semibold text-lg"
-                    >
-                        Générer le QR Code
-                    </button>
+                    <div id="qrMeta" class="mt-4 text-sm text-gray-600"></div>
                 </div>
             </div>
+        </section>
 
-            <!-- Bloc 2 - Résultat -->
-            <div class="card p-8">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6">Résultat</h3>
-                
-                <div id="qrcode" class="mb-6 bg-gray-50 rounded-lg p-6">
-                    <p class="text-gray-400 text-center">Votre QR Code apparaîtra ici</p>
-                </div>
-
-                <div id="actionButtons" class="space-y-4 hidden">
-                    <div class="grid grid-cols-2 gap-3">
-                        <button id="downloadPNG" class="btn-primary py-3 rounded-lg font-semibold">
-                            📥 PNG
-                        </button>
-                        <button id="downloadSVG" class="btn-primary py-3 rounded-lg font-semibold">
-                            📥 SVG
-                        </button>
+        <!-- Shortener -->
+        <section id="tab-short" class="tool-tab hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div class="card p-4 sm:p-6">
+                    <h3 class="text-xl font-bold mb-4">Raccourcir un lien (is.gd)</h3>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">URL</label>
+                    <input id="shortUrlInput" class="input-field w-full px-4 py-3" placeholder="https://example.com/long-url" />
+                    <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                        <button id="shortenBtn" class="btn-primary px-4 py-3 rounded-lg w-full sm:w-auto">Raccourcir</button>
+                        <button id="copyShort" class="btn-secondary px-4 py-3 rounded-lg w-full sm:w-auto">Copier</button>
                     </div>
-                    
-                    <button id="copyLink" class="btn-secondary w-full py-3 rounded-lg font-semibold">
-                        📋 Copier le texte
-                    </button>
+                    <p id="shortStatus" class="mt-3 text-sm text-gray-600"></p>
+                </div>
+                <div class="card p-4 sm:p-6 mt-6 md:mt-0">
+                    <h3 class="text-xl font-bold mb-4">Résultat</h3>
+                    <input id="shortResult" class="input-field w-full px-4 py-3 readonly" readonly />
+                </div>
+            </div>
+        </section>
 
-                    <div class="border-t pt-4 mt-4">
-                        <h4 class="font-semibold text-gray-700 mb-3">Partager sur</h4>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="share-btn border border-gray-300 py-2.5 rounded-lg font-medium hover:bg-gray-50" data-platform="whatsapp">
-                                💬 WhatsApp
-                            </button>
-                            <button class="share-btn border border-gray-300 py-2.5 rounded-lg font-medium hover:bg-gray-50" data-platform="facebook">
-                                📘 Facebook
-                            </button>
-                            <button class="share-btn border border-gray-300 py-2.5 rounded-lg font-medium hover:bg-gray-50" data-platform="twitter">
-                                🐦 Twitter
-                            </button>
-                            <button class="share-btn border border-gray-300 py-2.5 rounded-lg font-medium hover:bg-gray-50" data-platform="messenger">
-                                💬 Messenger
-                            </button>
-                        </div>
+        <!-- Password generator -->
+        <section id="tab-pass" class="tool-tab hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div class="card p-4 sm:p-6">
+                    <h3 class="text-xl font-bold mb-4">Générateur de mot de passe</h3>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Longueur</label>
+                    <input id="pwdLen" type="number" min="6" max="128" value="16" class="input-field w-32 px-4 py-2" />
+                    <div class="mt-3 space-y-2">
+                        <label class="inline-flex items-center"><input id="pwdUpper" type="checkbox" class="mr-2" checked> Majuscules</label>
+                        <label class="inline-flex items-center"><input id="pwdLower" type="checkbox" class="mr-2" checked> Minuscules</label>
+                        <label class="inline-flex items-center"><input id="pwdDigits" type="checkbox" class="mr-2" checked> Chiffres</label>
+                        <label class="inline-flex items-center"><input id="pwdSymbols" type="checkbox" class="mr-2" checked> Symboles</label>
+                    </div>
+                    <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                        <button id="genPwdBtn" class="btn-primary px-4 py-3 rounded-lg w-full sm:w-auto">Générer (API)</button>
+                        <button id="genPwdLocal" class="btn-secondary px-4 py-3 rounded-lg w-full sm:w-auto">Générer (local)</button>
                     </div>
                 </div>
+                <div class="card p-4 sm:p-6 mt-6 md:mt-0">
+                    <h3 class="text-xl font-bold mb-4">Mot de passe</h3>
+                    <input id="pwdResult" class="input-field w-full px-4 py-3 readonly" readonly />
+                    <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                        <button id="copyPwd" class="btn-primary px-4 py-3 rounded-lg w-full sm:w-auto">Copier</button>
+                    </div>
+                    <p id="pwdNote" class="mt-3 text-sm text-gray-600">Utilise l'API <code>motdepasse.xyz</code> avec fallback local si indisponible.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- History (simple) -->
+        <div class="card p-4 sm:p-6 mt-8">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
+                <h3 class="text-lg font-bold">Historique QR</h3>
+                <button id="clearHistory2" class="text-sm text-red-600">Effacer</button>
+            </div>
+            <div id="historyGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-sm text-gray-700">
+                <p class="col-span-full text-gray-400 text-center py-6">Aucun historique</p>
             </div>
         </div>
 
-        <!-- Historique -->
-        <div class="card p-8 mt-8">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-900">Historique récent</h3>
-                <button id="clearHistory" class="text-sm text-red-600 hover:text-red-700 font-medium">
-                    Effacer l'historique
-                </button>
-            </div>
-            <div id="history" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <p class="text-gray-400 col-span-full text-center py-8">Aucun QR Code généré récemment</p>
-            </div>
-        </div>
     </main>
 
     <!-- Footer -->
@@ -264,173 +324,298 @@
     </footer>
 
     <script>
-        let currentQRCode = null;
-        let currentText = '';
+        // Note: This file is an enhanced version of the original IzeeTools found in the project. Original uploaded file reference: the original index.html has been used as a base. fileciteturn0file0
 
-        const qrInput = document.getElementById('qrInput');
-        const generateBtn = document.getElementById('generateBtn');
-        const qrcodeDiv = document.getElementById('qrcode');
-        const actionButtons = document.getElementById('actionButtons');
-        const qrSize = document.getElementById('qrSize');
-        const sizeValue = document.getElementById('sizeValue');
-        const qrColor = document.getElementById('qrColor');
-        const colorValue = document.getElementById('colorValue');
-        const errorCorrection = document.getElementById('errorCorrection');
-
-        // Update size display
-        qrSize.addEventListener('input', (e) => {
-            sizeValue.textContent = e.target.value + 'px';
+        // --- Tabs for the main tools ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('bg-gray-100','text-gray-900'));
+                e.currentTarget.classList.add('bg-gray-100','text-gray-900');
+                const target = e.currentTarget.dataset.target;
+                document.querySelectorAll('.tool-tab').forEach(t => t.classList.add('hidden'));
+                document.getElementById(target).classList.remove('hidden');
+            });
         });
+        // Activate first tab
+        document.querySelector('.tab-btn[data-target="tab-qr"]').click();
 
-        // Update color display
-        qrColor.addEventListener('input', (e) => {
-            colorValue.textContent = e.target.value.toUpperCase();
-        });
+        // --- QR Type switching ---
+        const qrTypeBtns = document.querySelectorAll('.qr-type-btn');
+        qrTypeBtns.forEach(b => b.addEventListener('click', () => selectQRType(b.dataset.type)));
+        function selectQRType(type){
+            document.querySelectorAll('.qr-type-btn').forEach(b=>b.classList.remove('bg-gray-100'));
+            document.querySelectorAll('.qr-form').forEach(f=>f.classList.add('hidden'));
+            const activeBtn = document.querySelector('.qr-type-btn[data-type="'+type+'"]');
+            if(activeBtn) activeBtn.classList.add('bg-gray-100');
+            const form = document.querySelector('.qr-form[data-type="'+type+'"]');
+            if(form) form.classList.remove('hidden');
+        }
+        // default
+        selectQRType('raw');
 
-        // Generate QR Code
-        generateBtn.addEventListener('click', generateQRCode);
-        qrInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') generateQRCode();
-        });
+        // --- QR generation payload builders ---
+        function buildWifiPayload(){
+            const ssid = document.getElementById('wifiSSID').value || '';
+            const auth = document.getElementById('wifiAuth').value || 'WPA';
+            const pass = document.getElementById('wifiPass').value || '';
+            const hidden = document.getElementById('wifiHidden').checked ? 'H:true;' : '';
+            // Format: WIFI:T:WPA;S:mynetwork;P:mypass;;
+            const t = (auth === 'nopass') ? 'nopass' : auth;
+            return `WIFI:T:${t};S:${escapeSemicolon(ssid)};P:${escapeSemicolon(pass)};${hidden};`;
+        }
+        function escapeSemicolon(s){ return String(s).replace(/;/g,'\\;'); }
 
-        function generateQRCode() {
-            const text = qrInput.value.trim();
-            if (!text) {
-                alert('Veuillez entrer une URL ou du texte');
-                return;
+        function buildVCard(){
+            const name = document.getElementById('vcName').value || '';
+            const phone = document.getElementById('vcPhone').value || '';
+            const email = document.getElementById('vcEmail').value || '';
+            const org = document.getElementById('vcOrg').value || '';
+            const title = document.getElementById('vcTitle').value || '';
+            // Minimal vCard 3.0
+            const [fn, ...rest] = name.split(' ');
+            const n = rest.length ? `${rest.join(' ')};${fn}` : `${fn}`;
+            let v = `BEGIN:VCARD\nVERSION:3.0\n`;
+            if(name) v += `FN:${name}\n`;
+            if(org) v += `ORG:${org}\n`;
+            if(title) v += `TITLE:${title}\n`;
+            if(phone) v += `TEL;TYPE=CELL:${phone}\n`;
+            if(email) v += `EMAIL:${email}\n`;
+            v += `END:VCARD`;
+            return v;
+        }
+
+        function buildEmailPayload(){
+            const to = document.getElementById('emTo').value || '';
+            const subject = encodeURIComponent(document.getElementById('emSubject').value || '');
+            const body = encodeURIComponent(document.getElementById('emBody').value || '');
+            // mailto: scheme
+            let mailto = `mailto:${to}`;
+            const params = [];
+            if(subject) params.push(`subject=${subject}`);
+            if(body) params.push(`body=${body}`);
+            if(params.length) mailto += `?${params.join('&')}`;
+            return mailto;
+        }
+
+        function buildSMS(){
+            const to = document.getElementById('smsTo').value || '';
+            const body = encodeURIComponent(document.getElementById('smsBody').value || '');
+            // Use SMS format compatible: SMSTO:number:message or sms:number?body=
+            return `SMSTO:${to}:${decodeURIComponent(body)}`;
+        }
+
+        function buildGeo(){
+            const lat = document.getElementById('geoLat').value || '';
+            const lon = document.getElementById('geoLon').value || '';
+            const label = document.getElementById('geoLabel').value || '';
+            // geo:lat,lon?q=label
+            let g = `geo:${lat},${lon}`;
+            if(label) g += `?q=${encodeURIComponent(label)}`;
+            return g;
+        }
+
+        function buildEvent(){
+            const title = document.getElementById('evTitle').value || '';
+            const start = document.getElementById('evStart').value; // ISO local
+            const end = document.getElementById('evEnd').value;
+            const loc = document.getElementById('evLocation').value || '';
+            const desc = document.getElementById('evDesc').value || '';
+            // iCalendar VEVENT minimal
+            function toUTCformat(local){
+                if(!local) return '';
+                const d = new Date(local);
+                // YYYYMMDDTHHMMSSZ
+                return d.getUTCFullYear().toString().padStart(4,'0')+
+                    (d.getUTCMonth()+1).toString().padStart(2,'0')+
+                    d.getUTCDate().toString().padStart(2,'0')+'T'+
+                    d.getUTCHours().toString().padStart(2,'0')+
+                    d.getUTCMinutes().toString().padStart(2,'0')+
+                    d.getUTCSeconds().toString().padStart(2,'0')+'Z';
             }
+            const dtstart = toUTCformat(start);
+            const dtend = toUTCformat(end);
+            let ev = 'BEGIN:VCALENDAR\\nVERSION:2.0\\nBEGIN:VEVENT\\n';
+            if(dtstart) ev += `DTSTART:${dtstart}\\n`;
+            if(dtend) ev += `DTEND:${dtend}\\n`;
+            if(title) ev += `SUMMARY:${escapeNewline(title)}\\n`;
+            if(loc) ev += `LOCATION:${escapeNewline(loc)}\\n`;
+            if(desc) ev += `DESCRIPTION:${escapeNewline(desc)}\\n`;
+            ev += 'END:VEVENT\\nEND:VCALENDAR';
+            return ev;
+        }
+        function escapeNewline(s){ return String(s).replace(/\n/g,'\\n'); }
 
-            currentText = text;
-            qrcodeDiv.innerHTML = '';
-            
-            const size = parseInt(qrSize.value);
-            const color = qrColor.value;
-            const correction = errorCorrection.value;
+        // --- QR generation ---
+        let currentPayload = '';
+        let currentQRInstance = null;
 
-            currentQRCode = new QRCode(qrcodeDiv, {
+        document.getElementById('genQRBtn').addEventListener('click', () => {
+            // Determine type
+            const activeType = Array.from(document.querySelectorAll('.qr-form')).find(f=>!f.classList.contains('hidden')).dataset.type;
+            let payload = '';
+            switch(activeType){
+                case 'raw': payload = document.getElementById('rawText').value.trim(); break;
+                case 'wifi': payload = buildWifiPayload(); break;
+                case 'vcard': payload = buildVCard(); break;
+                case 'email': payload = buildEmailPayload(); break;
+                case 'sms': payload = buildSMS(); break;
+                case 'geo': payload = buildGeo(); break;
+                case 'event': payload = buildEvent(); break;
+                default: payload = document.getElementById('rawText').value.trim();
+            }
+            if(!payload){ alert('Veuillez remplir les champs requis.'); return; }
+            currentPayload = payload;
+            renderQRCode(payload);
+            saveHistory(payload);
+        });
+
+        document.getElementById('clearQR').addEventListener('click', () => {
+            document.getElementById('qrcode').innerHTML = '<p class="text-gray-400 text-center">Votre QR Code apparaîtra ici</p>';
+            document.getElementById('qrActions').classList.add('hidden');
+            currentPayload = '';
+        });
+
+        function renderQRCode(text){
+            const container = document.getElementById('qrcode');
+            container.innerHTML = '';
+            const size = 256;
+            const color = document.getElementById('qrColor2').value || '#000000';
+            const corr = document.getElementById('errorCorrection2').value || 'M';
+
+            currentQRInstance = new QRCode(container, {
                 text: text,
                 width: size,
                 height: size,
                 colorDark: color,
                 colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel[correction]
+                correctLevel: QRCode.CorrectLevel[corr]
             });
 
-            actionButtons.classList.remove('hidden');
-            saveToHistory(text);
-            loadHistory();
+            document.getElementById('qrActions').classList.remove('hidden');
+            document.getElementById('qrMeta').textContent = `Payload: ${truncate(text, 200)}`;
         }
 
-        // Download PNG
-        document.getElementById('downloadPNG').addEventListener('click', () => {
-            const canvas = qrcodeDiv.querySelector('canvas');
-            if (canvas) {
-                const link = document.createElement('a');
-                link.download = 'qrcode.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            }
-        });
+        function truncate(s, n){ return s.length>n? s.slice(0,n)+'...': s; }
 
-        // Download SVG
-        document.getElementById('downloadSVG').addEventListener('click', () => {
-            const img = qrcodeDiv.querySelector('img');
-            if (img) {
-                const canvas = qrcodeDiv.querySelector('canvas');
-                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">
-                    <image href="${img.src}" width="${canvas.width}" height="${canvas.height}"/>
-                </svg>`;
-                const blob = new Blob([svg], { type: 'image/svg+xml' });
+        // Download handlers
+        document.getElementById('downloadPNG2').addEventListener('click', ()=>{
+            const canvas = document.getElementById('qrcode').querySelector('canvas');
+            if(canvas){ const link = document.createElement('a'); link.download = 'qrcode.png'; link.href = canvas.toDataURL(); link.click(); }
+        });
+        document.getElementById('downloadSVG2').addEventListener('click', ()=>{
+            const canvas = document.getElementById('qrcode').querySelector('canvas');
+            const img = document.getElementById('qrcode').querySelector('img');
+            if(canvas){
+                // build SVG containing the PNG data as image (works as basic SVG export)
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}"><image href="${canvas.toDataURL()}" width="${canvas.width}" height="${canvas.height}"/></svg>`;
+                const blob = new Blob([svg], {type:'image/svg+xml'});
                 const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.download = 'qrcode.svg';
-                link.href = url;
-                link.click();
-                URL.revokeObjectURL(url);
+                const link = document.createElement('a'); link.download = 'qrcode.svg'; link.href = url; link.click(); URL.revokeObjectURL(url);
             }
         });
 
-        // Copy text
-        document.getElementById('copyLink').addEventListener('click', () => {
-            navigator.clipboard.writeText(currentText).then(() => {
-                const btn = document.getElementById('copyLink');
-                const originalText = btn.textContent;
-                btn.textContent = '✅ Copié !';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
+        document.getElementById('copyPayload').addEventListener('click', ()=>{
+            if(!currentPayload) return;
+            navigator.clipboard.writeText(currentPayload).then(()=>{
+                const btn = document.getElementById('copyPayload'); const old = btn.textContent; btn.textContent='✅ Copié'; setTimeout(()=>btn.textContent=old,1500);
             });
         });
 
-        // Share buttons
-        document.querySelectorAll('.share-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const platform = e.currentTarget.dataset.platform;
-                const text = encodeURIComponent(currentText);
-                let url = '';
+        // History
+        function saveHistory(payload){
+            let h = JSON.parse(localStorage.getItem('izee_history')||'[]');
+            h = h.filter(x=>x!==payload);
+            h.unshift(payload);
+            h = h.slice(0,12);
+            localStorage.setItem('izee_history', JSON.stringify(h));
+            renderHistory();
+        }
+        function renderHistory(){
+            const h = JSON.parse(localStorage.getItem('izee_history')||'[]');
+            const el = document.getElementById('historyGrid');
+            if(h.length===0){ el.innerHTML='<p class="col-span-full text-gray-400 text-center py-6">Aucun historique</p>'; return; }
+            el.innerHTML = h.map(p=>`<div class="border p-3 rounded hover:bg-gray-50 cursor-pointer" data-payload="${encodeURIComponent(p)}">${p.length>60? p.slice(0,60)+'...':p}</div>`).join('');
+            el.querySelectorAll('[data-payload]').forEach(d=>d.addEventListener('click', ()=>{ const payload = decodeURIComponent(d.dataset.payload); renderQRCode(payload); }))
+        }
+        document.getElementById('clearHistory2').addEventListener('click', ()=>{ if(confirm('Effacer l\'historique ?')){ localStorage.removeItem('izee_history'); renderHistory(); } });
+        renderHistory();
 
-                switch(platform) {
-                    case 'whatsapp':
-                        url = `https://wa.me/?text=${text}`;
-                        break;
-                    case 'facebook':
-                        url = `https://www.facebook.com/sharer/sharer.php?u=${text}`;
-                        break;
-                    case 'twitter':
-                        url = `https://twitter.com/intent/tweet?text=${text}`;
-                        break;
-                    case 'messenger':
-                        url = `fb-messenger://share/?link=${text}`;
-                        break;
-                }
-
-                if (url) {
-                    window.open(url, '_blank');
-                }
-            });
+        // --- Shortener (is.gd) ---
+        document.getElementById('shortenBtn').addEventListener('click', async ()=>{
+            const url = document.getElementById('shortUrlInput').value.trim();
+            if(!url) return alert('Entrez une URL');
+            const status = document.getElementById('shortStatus');
+            status.textContent = 'Raccourcissement en cours...';
+            try{
+                // Using is.gd JSON API (CORS permissive)
+                const res = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`);
+                const j = await res.json();
+                if(j.shorturl){ document.getElementById('shortResult').value = j.shorturl; status.textContent='Terminé'; }
+                else { status.textContent = 'Erreur: ' + (j.errormessage||'réponse invalide'); }
+            }catch(err){ status.textContent = 'Impossible de contacter is.gd'; }
         });
+        document.getElementById('copyShort').addEventListener('click', ()=>{ const v=document.getElementById('shortResult').value; if(v) navigator.clipboard.writeText(v); });
 
-        // History management
-        function saveToHistory(text) {
-            let history = JSON.parse(localStorage.getItem('qrHistory') || '[]');
-            history = history.filter(item => item !== text);
-            history.unshift(text);
-            history = history.slice(0, 6);
-            localStorage.setItem('qrHistory', JSON.stringify(history));
+        // --- Password generator ---
+        async function generatePasswordAPI(len, upper, lower, digits, symbols){
+            // API: motdepasse.xyz - attempt without definitive param docs; use simple call and fallback
+            try{
+                const res = await fetch(`https://www.motdepasse.xyz/api/${len}`);
+                if(!res.ok) throw new Error('API error');
+                const text = await res.text();
+                // the API returns plain text password in many simple endpoints
+                if(text) return text.trim();
+            }catch(e){ throw e; }
+        }
+        function generatePasswordLocal(len, upper, lower, digits, symbols){
+            const U = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const L = 'abcdefghijklmnopqrstuvwxyz';
+            const D = '0123456789';
+            const S = '!@#$%^&*()-_=+[]{};:,.<>?';
+            let pool = '';
+            if(upper) pool+=U; if(lower) pool+=L; if(digits) pool+=D; if(symbols) pool+=S;
+            if(!pool) pool = L+U+D;
+            let pw='';
+            const cryptoObj = window.crypto || window.msCrypto;
+            const random = (max)=>{ const arr = new Uint32Array(1); cryptoObj.getRandomValues(arr); return arr[0] % max; };
+            for(let i=0;i<len;i++) pw += pool[random(pool.length)];
+            return pw;
         }
 
-        function loadHistory() {
-            const history = JSON.parse(localStorage.getItem('qrHistory') || '[]');
-            const historyDiv = document.getElementById('history');
-            
-            if (history.length === 0) {
-                historyDiv.innerHTML = '<p class="text-gray-400 col-span-full text-center py-8">Aucun QR Code généré récemment</p>';
-                return;
-            }
-
-            historyDiv.innerHTML = history.map(text => `
-                <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 cursor-pointer transition" onclick="loadHistoryItem('${text.replace(/'/g, "\\'")}')">
-                    <p class="text-sm text-gray-700 truncate font-medium">${text}</p>
-                    <p class="text-xs text-gray-500 mt-1">Cliquer pour régénérer</p>
-                </div>
-            `).join('');
-        }
-
-        window.loadHistoryItem = function(text) {
-            qrInput.value = text;
-            generateQRCode();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        document.getElementById('clearHistory').addEventListener('click', () => {
-            if (confirm('Voulez-vous vraiment effacer l\'historique ?')) {
-                localStorage.removeItem('qrHistory');
-                loadHistory();
+        document.getElementById('genPwdBtn').addEventListener('click', async ()=>{
+            const len = parseInt(document.getElementById('pwdLen').value)||16;
+            const upper = document.getElementById('pwdUpper').checked;
+            const lower = document.getElementById('pwdLower').checked;
+            const digits = document.getElementById('pwdDigits').checked;
+            const symbols = document.getElementById('pwdSymbols').checked;
+            document.getElementById('pwdResult').value = 'Génération en cours...';
+            try{
+                const pw = await generatePasswordAPI(len, upper, lower, digits, symbols);
+                document.getElementById('pwdResult').value = pw;
+            }catch(e){
+                // fallback local
+                const pw = generatePasswordLocal(len, upper, lower, digits, symbols);
+                document.getElementById('pwdResult').value = pw;
             }
         });
+        document.getElementById('genPwdLocal').addEventListener('click', ()=>{
+            const len = parseInt(document.getElementById('pwdLen').value)||16;
+            const upper = document.getElementById('pwdUpper').checked;
+            const lower = document.getElementById('pwdLower').checked;
+            const digits = document.getElementById('pwdDigits').checked;
+            const symbols = document.getElementById('pwdSymbols').checked;
+            document.getElementById('pwdResult').value = generatePasswordLocal(len, upper, lower, digits, symbols);
+        });
+        document.getElementById('copyPwd').addEventListener('click', ()=>{ const v=document.getElementById('pwdResult').value; if(v) navigator.clipboard.writeText(v); });
 
-        // Load history on page load
-        loadHistory();
+        // Activate minimal accessible styles for active QR type buttons
+        document.querySelectorAll('.qr-type-btn').forEach((b,i)=>{ if(i===0) b.classList.add('bg-gray-100'); });
+
+        // Small helper: allow pressing Enter to submit main QR form when focus in inputs
+        document.querySelectorAll('#qrForms input, #qrForms textarea').forEach(inp => {
+            inp.addEventListener('keypress', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('genQRBtn').click(); } });
+        });
+
     </script>
 </body>
 </html>
