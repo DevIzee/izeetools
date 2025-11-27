@@ -6,6 +6,8 @@
     <title>IzeeTools — Générateur QR & utilitaires</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -156,13 +158,25 @@
 
                         <!-- Geo -->
                         <div class="qr-form hidden" data-type="geo">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
-                            <input id="geoLat" class="input-field w-full px-4 py-3" placeholder="48.8566" />
-                            <div class="mt-3">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
-                                <input id="geoLon" class="input-field w-full px-4 py-3" placeholder="2.3522" />
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher un lieu</label>
+                            <div class="flex gap-2 mb-2">
+                                <input id="geoSearch" class="input-field w-full px-4 py-3" placeholder="Paris, Eiffel Tower..." autocomplete="off" />
+                                <button id="geoSearchBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold">🔍</button>
                             </div>
-                            <div class="mt-3">
+                            <div id="geoSearchResults" class="bg-white border rounded shadow text-sm z-10 max-h-40 overflow-auto mb-2" style="display:none;"></div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sélectionnez un point sur la carte</label>
+                            <div id="geoMap" style="height:220px; border-radius:8px; overflow:hidden; margin-bottom:1rem;"></div>
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
+                                    <input id="geoLat" class="input-field w-full px-4 py-3" placeholder="48.8566" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
+                                    <input id="geoLon" class="input-field w-full px-4 py-3" placeholder="2.3522" />
+                                </div>
+                            </div>
+                            <div class="mb-1">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Label (optionnel)</label>
                                 <input id="geoLabel" class="input-field w-full px-4 py-3" placeholder="Nom du lieu" />
                             </div>
@@ -616,6 +630,104 @@
             inp.addEventListener('keypress', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('genQRBtn').click(); } });
         });
 
+    // --- OpenStreetMap (Leaflet) for Geo QR ---
+    let geoMap, geoMarker;
+    function initGeoMap() {
+        if (geoMap) return;
+        geoMap = L.map('geoMap').setView([48.8566, 2.3522], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(geoMap);
+        geoMarker = null;
+        geoMap.on('click', function(e) {
+            const {lat, lng} = e.latlng;
+            document.getElementById('geoLat').value = lat.toFixed(6);
+            document.getElementById('geoLon').value = lng.toFixed(6);
+            if (geoMarker) geoMap.removeLayer(geoMarker);
+            geoMarker = L.marker([lat, lng]).addTo(geoMap);
+        });
+    }
+    // Show map only when geo tab is active
+    document.querySelectorAll('.qr-type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.dataset.type === 'geo') {
+                setTimeout(() => {
+                    initGeoMap();
+                    geoMap.invalidateSize();
+                }, 200);
+            }
+        });
+    });
+    // If user edits lat/lon manually, update marker
+    function updateGeoMarkerFromInputs() {
+        if (!geoMap) return;
+        const lat = parseFloat(document.getElementById('geoLat').value);
+        const lon = parseFloat(document.getElementById('geoLon').value);
+        if (!isNaN(lat) && !isNaN(lon)) {
+            geoMap.setView([lat, lon], geoMap.getZoom());
+            if (geoMarker) geoMap.removeLayer(geoMarker);
+            geoMarker = L.marker([lat, lon]).addTo(geoMap);
+        }
+    }
+    document.getElementById('geoLat').addEventListener('change', updateGeoMarkerFromInputs);
+    document.getElementById('geoLon').addEventListener('change', updateGeoMarkerFromInputs);
+
+    // --- Geocoding (search) for Geo QR ---
+    async function geoSearch(query) {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+        const res = await fetch(url, {headers: { 'Accept-Language': 'fr' }});
+        if (!res.ok) return [];
+        return await res.json();
+    }
+    const geoSearchInput = document.getElementById('geoSearch');
+    const geoSearchBtn = document.getElementById('geoSearchBtn');
+    const geoSearchResults = document.getElementById('geoSearchResults');
+    function showGeoResults(results) {
+        if (!results.length) {
+            geoSearchResults.innerHTML = '<div class="p-2 text-gray-500">Aucun résultat</div>';
+            geoSearchResults.style.display = 'block';
+            return;
+        }
+        geoSearchResults.innerHTML = results.map(r =>
+            `<div class="p-2 hover:bg-gray-100 cursor-pointer" data-lat="${r.lat}" data-lon="${r.lon}"><b>${r.display_name.split(',')[0]}</b><br><span class="text-xs text-gray-500">${r.display_name}</span></div>`
+        ).join('');
+        geoSearchResults.style.display = 'block';
+        geoSearchResults.querySelectorAll('[data-lat]').forEach(el => {
+            el.addEventListener('click', () => {
+                const lat = parseFloat(el.getAttribute('data-lat'));
+                const lon = parseFloat(el.getAttribute('data-lon'));
+                document.getElementById('geoLat').value = lat.toFixed(6);
+                document.getElementById('geoLon').value = lon.toFixed(6);
+                if (geoMap) {
+                    geoMap.setView([lat, lon], 15);
+                    if (geoMarker) geoMap.removeLayer(geoMarker);
+                    geoMarker = L.marker([lat, lon]).addTo(geoMap);
+                }
+                geoSearchResults.style.display = 'none';
+            });
+        });
+    }
+    geoSearchBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const q = geoSearchInput.value.trim();
+        if (!q) return;
+        geoSearchResults.innerHTML = '<div class="p-2 text-gray-400">Recherche...</div>';
+        geoSearchResults.style.display = 'block';
+        const results = await geoSearch(q);
+        showGeoResults(results);
+    });
+    geoSearchInput.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter') {
+            geoSearchBtn.click();
+        }
+    });
+    document.addEventListener('click', (e) => {
+        if (!geoSearchResults.contains(e.target) && e.target !== geoSearchInput && e.target !== geoSearchBtn) {
+            geoSearchResults.style.display = 'none';
+        }
+    });
+    // ...existing code...
     </script>
 </body>
 </html>
